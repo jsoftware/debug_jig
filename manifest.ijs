@@ -1,12 +1,12 @@
 NB. manifest for Jig
 CAPTION=: 'Augmented Display of J results'
-VERSION=: '1.0.3'
+VERSION=: '1.0.4'
 PLATFORMS=: ''
 FILES=: 0 : 0
 jig.ijs
 manifest.ijs
 )
-RELEASE=: 'j805 j806'
+RELEASE=: 'j805 j806 j807'
 DEPENDS=: 0 : 0
 graphics/gl2
 )
