@@ -6,7 +6,10 @@ FILES=: 0 : 0
 jig.ijs
 manifest.ijs
 )
-RELEASE=: 'j805 j806 j807'
+RELEASE=: 'j805'
+
+FOLDER=: 'debug/jig'
+
 DEPENDS=: 0 : 0
 graphics/gl2
 )
