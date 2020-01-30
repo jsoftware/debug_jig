@@ -1,4 +1,4 @@
-NB. Version 2.0 for this add on - QTide tooltips used - J901 passed testfile load '/users/bobtherriault/j901-user/projects/enhanced/rund.ijs'
+NB. Version 2.0 for this add on - QTide tooltips used - J807 passed testfile load '/users/bobtherriault/j807-user/projects/enhanced/runjig807.ijs'
 NB.coerase <'jig' NB. clear previous jig variables, helps in updates
 cocurrent'jig' NB. Set the defining locale as jig
 require 'gl2'
