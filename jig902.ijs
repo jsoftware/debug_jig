@@ -137,18 +137,6 @@ tt=. '<title>',(30#'='),(55({.!.B)' Type',B,':',B,x),(40{.' Array',B,'Shape ',B,
 ('<g><rect rx="6" fill="#96C" width="',(": 30 + 9.59 * {: $ m),'" height="',(": 20 + 17 * # m),'" fill-opacity="1"></rect><rect overflow="visible" ');('rx="6" ',(1-: {. $ y){::('stroke="white" fill="#fff"');('fill="#dde" stroke="#aac"'));'" width="';(30 + 9.59 * {: $ m);'" height="';(20 + 17 * # m);'">',tt,'</rect>',anim,'</g>',tm 
 )
 
-boxutf=: 3 : 0"1
-a=.a: [ t=.3 u: y
-while. #t do.
- select. s=. 127 191 223 239 I. {. t
-  case. (0;1) do. t=.}.t [ a=.a,< {.t                   
-  case.       do. if. 0={:t1=.s{.t do. a=.a,<"0 t1-.0 
-                                   elseif. 191 < >./ }.t1 do. a=.a,<"0 s{.t1 [ s=.>:@:(1 i.~ 191 < }.) t1
-                                   elseif.                do. a=.a,< t1   end. t=. s }.t
- end.
-end.
-}.a
-)
 boxutf =: ({.^:(1=#) each)@:((1 (0) } (128&> +. (193&< *. 16bdbff&>) +. 16bdfff&< )) < ;. 1 ] )@:(3&u:)"1
 mask=:((1+i:&1) {. ]) @ (((,@#,:) , 0:)/) @ (}:@$ , 1:)
 rsfiy=:,.@:(({:@$ # 18*(# i.@#)@mask)`0:@.(''-:$)) NB. mask used to generate y position values
@@ -173,14 +161,23 @@ if. s do. (19.5 + >./  xw +&, xc);(32 + (18 * ({: ; lit) e. 10;13)+{: ,yc);tm NB
 
 glfontextent_jgl2_ FONT,' 12' NB. sets fontspec for glqextent in wuf
 wuf=: (9.59 * (* * 7&>. % 7:) @: (1&>.) @: {. @: glqextent_jgl2_ @: ":)
-
+boxuni=: 3 : 0"1
+a=.a: [ t=.3 u: y
+while. #t do.
+ select.  55295 57343 I. {. t
+  case. (0;2) do. t=. }. t [ a=. a , < {. t
+  case.       do. if. (56320&> +. 57343&<:) {: t1=.2 {. t  do. t=.  }. t [ a=.a , < {. t else. t=.2 }. t [ a=.a , < t1 end.                                                           
+ end.
+end.
+}.a
+)
 
 unisvg=: 4 : 0 NB. unicode case
 's b'=. ({.,{:) x 
-if. b do. yc=. ,. (msk=.a:~: ,uni2) # rsfiy uni2=. boxutf y
+if. b do. yc=. ,. (msk=.a:~: ,uni2) # rsfiy uni2=. boxuni y
           xc=.,. msk # , 0&,@}:@(+/\)"1 xw=.(># each   uni2) *  ,/"1 >(((9.59 * 0.5+1.5*FM)"_)`(9.59 *1:)`((9.59 *0.5+1.5*FM)"_)`(wuf@(7&u:)@,)@.( 15 26 31 I. {.))each uni2  
           uni21=. ,-.&a: each <"1 -.&a: uni2 [ xwv=. ": ,. xw=. msk # ; xw 
-    else. yc=. ,.( ([ S:0 (# each each uni2) ) # (18 * _1 |.!.0 +/\)) @:;@: (;@:(}: , >:@:;each@:{:) each) @: (+/@:((10;13)e.{:) each each) uni2=. unb lc boxutf y
+    else. yc=. ,.( ([ S:0 (# each each uni2) ) # (18 * _1 |.!.0 +/\)) @:;@: (;@:(}: , >:@:;each@:{:) each) @: (+/@:((10;13)e.{:) each each) uni2=. unb lc boxuni y
           xc=. ,.  ; 0&,@}:@(+/\)@,"1 each xw=. ( ; each # each each uni21) * each xw=.((9.59 * 0.5+1.5*FM"_)`(9.59 * 12"_)`(9.59 * 0.5+1.5*FM"_)`1:`(9.59 * 0.5+1.5*FM"_)`(wuf@(7&u:)@>)@.(8 9 15 26 31 I. {.@:>))"0  each uni21=.-.&a: ; uni2
           xwv=. ": ,.  xw=. ;xw  end. 
 tt=.'<title>',"1(20#'='),"1 (26({.!.B)"1 (' Unicode',B,':',B),"1 (;@:(>@:(": each)each) uni21)),"1' ',"1 (20#'='),"1'</title>'
@@ -194,10 +191,10 @@ if. s do. (21.5+ >./  xw +&, xc);(32 + (18 * ({: ; uni2) e. 10;13)+{: ,yc); tm
 
 vnisvg=: 4 : 0 NB. unicode4 case
 's b'=. ({.,{:) x
-if. b do. yc=. ,. (msk=.a:~: ,uni4) # rsfiy  uni4=.  boxutf y 
+if. b do. yc=. ,. (msk=.a:~: ,uni4) # rsfiy  uni4=.  boxuni y 
           xc=. ,. msk # , 0&,@}:@ (+/\)"1 xw=.(> # each uni4) * ,/"1 >(((9.59 * 0.5+1.5*FM)"_)`(9.59 *1:)`((9.59 *0.5+1.5*FM)"_)`(wuf@(7&u:)@,)@.( 15 26 31 I. {.))each uni4  
           uni41=. ,-.&a: each <"1 -.&a: uni4 [ xwv=. ": ,. xw=. msk # ; xw
-    else. yc=. ,.( ([ S:0 (# each each uni4) ) # (18 * _1 |.!.0 +/\)) @:;@: (;@:(}: , >:@:;each@:{:) each) @: (+/@:((10;13)e.{:) each each) uni4=. unb lc boxutf y
+    else. yc=. ,.( ([ S:0 (# each each uni4) ) # (18 * _1 |.!.0 +/\)) @:;@: (;@:(}: , >:@:;each@:{:) each) @: (+/@:((10;13)e.{:) each each) uni4=. unb lc boxuni y
           xc=. ,.  ; 0&,@}:@(+/\)@,"1 each xw=. ( ; each # each each uni41) * each ((9.59 * 0.5+1.5*FM"_)`(9.59 * 12"_)`(9.59 * 0.5+1.5*FM"_)`1:`(9.59 * 0.5+1.5*FM"_)`(wuf@(7&u:)@>)@.(8 9 15 26 31 I. {.@:>))"0  each uni41=.-.&a: ; uni4
           xwv=. ": ,. xw=.; xw  end.  
 tt=.'<title>',"1(20#'='),"1 (26({.!.B)"1 (' Unicode4',B,':',B),"1 (;@:(>@:(": each)each) uni41)),"1' ',"1 (20#'='),"1'</title>'
