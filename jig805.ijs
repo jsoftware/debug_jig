@@ -68,7 +68,7 @@ enhanced_jctrl_fkey=: labs_run_jqtide_ bind 0
 htmpack=: 3 :'''<hmtl><head><meta charset="UTF-8">'',''</head><body>'', y ,''</body></html>'''
 cnv=:,/ @: > @: (8!:0) NB. converts _20 to -20 for svg text and justifies appropriately
 sc=: 3 : '((1 >. % SCALE)* ])  y'
-B=: 30{a. NB. non line-breakable blank for tooltips
+B=: 32{a. NB. non line-breakable blank for tooltips
 anim=:'<set attributeName="fill-opacity" to="1" /><animate attributeName="fill-opacity" begin="mouseover" from="1" to="0" calcMode="linear" dur="0.5" fill="freeze" /><animate attributeName="fill-opacity" begin="mouseout" from="0" to="1" calcMode="linear" dur="0.25" fill="freeze"/>'
 
 visual=: 4 : 0 NB. main verb that collects input, checks for errors then sends for processing, takes these results and wraps them up to be displayed by webdisplay. Retains information on the current window to track multiple displays.
