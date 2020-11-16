@@ -204,13 +204,23 @@ if. s do. (19.5 + >./  xw +&, xc);(32 + (18 * ({: ; lit) e. 10;13)+{: ,yc);tm NB
 
 glfontextent_jgl2_ FONT,' 12' NB. sets fontspec for glqextent in wuf
 wuf=: (9.59 * (* * 7&>. % 7:) @: (1&>.) @: {. @: glqextent_jgl2_ @: ":)
+boxuni=: 3 : 0"1
+a=.a: [ t=.3 u: y
+while. #t do.
+ select.  55295 57343 I. {. t
+  case. (0;2) do. t=. }. t [ a=. a , < {. t
+  case.       do. if. (56320&> +. 57343&<:) {: t1=.2 {. t  do. t=.  }. t [ a=.a , < {. t else. t=.2 }. t [ a=.a , < t1 end.                                                           
+ end.
+end.
+}.a
+)
 
 unisvg=: 4 : 0 NB. unicode case
 's b'=. ({.,{:) x 
-if. b do. yc=. ,. (msk=.a:~: ,uni2) # rsfiy uni2=. boxutf y
+if. b do. yc=. ,. (msk=.a:~: ,uni2) # rsfiy uni2=. boxuni y
           xc=.,. msk # , 0&,@}:@(+/\)"1 xw=.(># each   uni2) *  ,/"1 >(((9.59 * 0.5+1.5*FM)"_)`(9.59 *1:)`((9.59 *0.5+1.5*FM)"_)`(wuf@(7&u:)@,)@.( 15 26 31 I. {.))each uni2  
           uni21=. ,-.&a: each <"1 -.&a: uni2 [ xwv=. ": ,. xw=. msk # ; xw 
-    else. yc=. ,.( ([ S:0 (# each each uni2) ) # (18 * _1 |.!.0 +/\)) @:;@: (;@:(}: , >:@:;each@:{:) each) @: (+/@:((10;13)e.{:) each each) uni2=. unb lc boxutf y
+    else. yc=. ,.( ([ S:0 (# each each uni2) ) # (18 * _1 |.!.0 +/\)) @:;@: (;@:(}: , >:@:;each@:{:) each) @: (+/@:((10;13)e.{:) each each) uni2=. unb lc boxuni y
           xc=. ,.  ; 0&,@}:@(+/\)@,"1 each xw=. ( ; each # each each uni21) * each xw=.((9.59 * 0.5+1.5*FM"_)`(9.59 * 12"_)`(9.59 * 0.5+1.5*FM"_)`1:`(9.59 * 0.5+1.5*FM"_)`(wuf@(7&u:)@>)@.(8 9 15 26 31 I. {.@:>))"0  each uni21=.-.&a: ; uni2
           xwv=. ": ,.  xw=. ;xw  end. 
 tt=.'<title> Unicode: ',"1 (;@:(>@:(": each)each) uni21),"1' </title>'
@@ -224,10 +234,10 @@ if. s do. (21.5+ >./  xw +&, xc);(32 + (18 * ({: ; uni2) e. 10;13)+{: ,yc); tm
 
 vnisvg=: 4 : 0 NB. unicode4 case
 's b'=. ({.,{:) x
-if. b do. yc=. ,. (msk=.a:~: ,uni4) # rsfiy  uni4=.  boxutf y 
+if. b do. yc=. ,. (msk=.a:~: ,uni4) # rsfiy  uni4=.  boxuni y 
           xc=. ,. msk # , 0&,@}:@ (+/\)"1 xw=.(> # each uni4) * ,/"1 >(((9.59 * 0.5+1.5*FM)"_)`(9.59 *1:)`((9.59 *0.5+1.5*FM)"_)`(wuf@(7&u:)@,)@.( 15 26 31 I. {.))each uni4  
           uni41=. ,-.&a: each <"1 -.&a: uni4 [ xwv=. ": ,. xw=. msk # ; xw
-    else. yc=. ,.( ([ S:0 (# each each uni4) ) # (18 * _1 |.!.0 +/\)) @:;@: (;@:(}: , >:@:;each@:{:) each) @: (+/@:((10;13)e.{:) each each) uni4=. unb lc boxutf y
+    else. yc=. ,.( ([ S:0 (# each each uni4) ) # (18 * _1 |.!.0 +/\)) @:;@: (;@:(}: , >:@:;each@:{:) each) @: (+/@:((10;13)e.{:) each each) uni4=. unb lc boxuni y
           xc=. ,.  ; 0&,@}:@(+/\)@,"1 each xw=. ( ; each # each each uni41) * each ((9.59 * 0.5+1.5*FM"_)`(9.59 * 12"_)`(9.59 * 0.5+1.5*FM"_)`1:`(9.59 * 0.5+1.5*FM"_)`(wuf@(7&u:)@>)@.(8 9 15 26 31 I. {.@:>))"0  each uni41=.-.&a: ; uni4
           xwv=. ": ,. xw=.; xw  end.  
 tt=.'<title> Unicode4: ',"1 (;@:(>@:(": each)each) uni41),"1' </title>'
