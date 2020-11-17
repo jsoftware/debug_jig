@@ -30,7 +30,7 @@ CSS=: 0 : 0  NB. CSS for the different types and animations of tootips.
  .sv { fill:#600;}
  .d  { fill:#dde; stroke:#aac; stroke-width:1;}
  .j  { fill:#fff;}
- .x  { stroke:black; stroke-width:1.5; rx:0;} 
+ .x  { stroke:black; stroke-width:2.5; rx:0;} 
  .z0 { fill:#fff; stroke:#666; stroke-width:1;}
  .z1 { fill:#bbb;}
  .z2 { fill:#666;}
@@ -112,6 +112,7 @@ anim=:'<set attributeName="fill-opacity" to="1" /><animate attributeName="fill-o
 
 visual=: 4 : 0 NB. main verb that collects input, checks for errors then sends for processing, takes these results and wraps them up to be displayed by webdisplay. Retains information on the current window to track multiple displays.
 cocurrent > {: x
+BOX=: _1
 if. >{. x do. vobj_jig_=. findline_jig_ y else. vobj_jig_=.y end. NB. if true then process current line, if false then just a window redraw for size or font don't want to go back to the line.
 if. _1~: t_jig_=. 4!:0 <vobj_jig_ do. try. t_jig_ =. 4!:0 <'prox_jig_'[ ". 'prox_jig_=. ', vobj_jig_ catch. t=._2 end. end.  
 cocurrent 'jig'
@@ -156,7 +157,7 @@ end.
 zerosvg=: 4 : 0 NB. empty shapes case for all types
 'typ s'=.x
 if. s do. 34;32;'<rect class="syb" x="15.5" y="7" width="14.39" rx="2"></rect><title> UTF-8 : 0</title></rect><text font-family="',FONT,'" font-size="0.8em" x="18.5" y="20"> </text>' NB. case for s: 0{a.  which has shape 0
-      else.tt=. '<title> ',(; (('sparse boolean';'sparse integer';'sparse floating';'sparse complex';'sparse boxed';'literal';'unicode';'unicode4';'symbol';'boxed';'boolean';'integer';'extended';'floating';'rational';'complex') i. <typ){ ('Sparse Boolean';'Sparse Integer';'Sparse Floating';'Sparse Complex';'Sparse Boxed';'Literal';'Unicode';'Unicode4';'Symbol';'Box';'Boolean';'Integer';'Extended';'Floating';'Rational';'Complex')),' ',LF,' Shape: ',(":$y),' </title>'
+      else.tt=. '<title> ',(; (('sparse boolean';'sparse integer';'sparse floating';'sparse complex';'sparse boxed';'literal';'unicode';'unicode4';'symbol';'boxed';'boolean';'integer';'extended';'floating';'rational';'complex') i. <typ){ ('Sparse Boolean';'Sparse Integer';'Sparse Floating';'Sparse Complex';'Sparse Boxed';'Literal';'Unicode';'Unicode4';'Symbol';'Box';'Boolean';'Integer';'Extended';'Floating';'Rational';'Complex')),' ',LF,(; (BOX>:0){'';(' Depth: ',(":>:BOX),LF)),' Shape: ',(":$y),' </title>'
            '<rect class="';('z',": (*@:# + *@:#@:, + *@:(+/)@:$) y);'" width="';( 6 + (8 * {:)`(0:) @.(0-:{:)$ y);'" height="';(14 + 18 *  */@:}:@:$ y);'" rx="6">',tt,'</rect>' end.
 )
 
@@ -179,8 +180,18 @@ tm=.,(((": 12 + sep);'p') nmercal ,. (# m) # '|'),tm, tb,((": 23 + sep) ; 7 }. x
 tt=. '<title> ',(; (('sparse boolean';'sparse integer';'sparse floating';'sparse complex';'sparse boxed') i. <x){ ('Sparse Boolean';'Sparse Integer';'Sparse Floating';'Sparse Complex';'Sparse Boxed')),' ',LF,' Array Shape: ', (": $ y),' </title>'
 '<rect class="';((1-: {. $ y){'jd');'" width="';(30 + 9.59 * {: $ m);'" height="';(20 + 17 * # m);'" rx="6">',tt,'</rect>',tm
 )
-
-boxutf =: ({.^:(1=#) each)@:((1 (0) } (128&> +. (193&< *. 16bdbff&>) +. 16bdfff&< )) < ;. 1 ] )@:(3&u:)"1
+boxutf=: 3 : 0"1
+a=.a: [ t=.3 u: y
+while. #t do.
+ select. s=. 127 191 223 239 I. {. t
+  case. (0;1) do. t=.}.t [ a=.a,< {.t                   
+  case.       do. if. 0={:t1=.s{.t do. a=.a,<"0 t1-.0 
+                                   elseif. 191 < >./ }.t1 do. a=.a,<"0 s{.t1 [ s=.>:@:(1 i.~ 191 < }.) t1
+                                   elseif.                do. a=.a,< t1   end. t=. s }.t
+ end.
+end.
+}.a
+)
 mask=:(-@<:@# }. ((,@#,:) , 0:)/) @ (}:@$ , 1:)
 rsfiy=:,.@:(({:@$ # 18*(# i.@#)@mask)`0:@.(''-:$)) NB. mask used to generate y position values
 valclean=:>@(('&#9484;';'&#9516;';'&#9488;';'&#9500;';'&#9532;';'&#9508;';'&#9492;';'&#9524;';'&#9496;';'&#9474;';'&#9472;') {~ ((16+i.11) {a.) &i.) NB. box characters insertion
@@ -198,7 +209,7 @@ tm=. '<rect class="',"1(s{::((,. -.&(<'') , 33&>@:{.each S:1 lit){::'lb';'lc');'
 vals=. ;@:,.@:(;"1@:,.@:((' '"_)`(":@u:)`(valclean@:{&a.)`(({&a.))@.(0 15 26 I.{.) each) each)lit NB. vals raw values cleaned to show box characters in svg
 tm=. ,tm  ,"1 '<text class="',"1 (s{::'l';'sy'),"1'" x="',"1(cnv (s * 14)+xc+4.5),"1'" y="',"1(cnv yc+20),"1'">',"1 vals ,"1 '</text>'
 if. s do. (19.5 + >./  xw +&, xc);(32 + (18 * ({: ; lit) e. 10;13)+{: ,yc);tm NB. width height character string
-    else. tt=. '<title> Literal ',LF,' Shape: ',((''-:  $ y){::(":  $ y);'atom'),' </title>'
+    else. tt=. '<title> Literal ',LF,(; b{'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::(":  $ y);'atom'),' </title>'
          '<rect class="';((1-: {. $ y){'jd');'" width="';(7.5 + >./  xw +&, xc);'" height="';(32 + (18* (-.b) * ({: ; lit) e. 10;13)+{: ,yc);'" rx="6">',tt,'</rect>',tm  end.
 )
 
@@ -228,7 +239,7 @@ tm=. '<rect class="',"1(s{::'ub';'syb'),"1'" x="',"1(": (s * 12)+ xc+5),"1'" y="
 vals=.": ;@:,.@:(;"1@:,.@:((' '"_)`((9&u:)@:(9&u:))`(valclean@:{&a.)`((9&u:)@:(9&u:))@.(0 15 26 I.{.) each) each) uni21 NB. vals raw values cleaned to show box characters
 tm=. ,tm  ,"1 '<text class="',"1(s{::'u';'sy'),"1 '" x="',"1(cnv (s * 12) + xc+6),"1'" y="',"1(cnv yc+20),"1'">',"1 vals ,"1 '</text>'
 if. s do. (21.5+ >./  xw +&, xc);(32 + (18 * ({: ; uni2) e. 10;13)+{: ,yc); tm
-    else. tt=. '<title> Unicode ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+    else. tt=. '<title> Unicode ',LF,(; b{'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
          '<rect class="';((1-: {. $ y){'jd');'" width="';(10.5 + >./  xw +&, xc);'" height="';(32 + (18* (-.b) * ({: ; uni21) e. 10;13)+{: ,yc);'" rx="6">',tt,'</rect>',tm  end.
 )
 
@@ -245,7 +256,7 @@ tm=. '<rect class="',"1(s{::'u4';'syb'),"1'" x="',"1(": (s * 12)+ xc+5),"1'" y="
 vals=.": ;@:,.@:(;"1@:,.@:((' '"_)`((9&u:)@:(9&u:))`(valclean@:{&a.)`((9&u:)@:(9&u:))@.(0 15 26 I.{.) each) each) uni41 NB. vals raw values cleaned to show box characters
 tm=. ,tm  ,"1 '<text class="',"1(s{::'v';'sy'),"1 '" x="',"1(cnv (s * 12) + xc+6),"1'" y="',"1(cnv yc+19),"1'">',"1 vals ,"1 '</text>'
 if. s do. (21.5+ >./  xw +&, xc);(32 + (18 * ({: ; uni4) e. 10;13)+{: ,yc); tm
-    else. tt=. '<title> Unicode4 ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+    else. tt=. '<title> Unicode4 ',LF,(; b{'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
          '<rect class="';((1-: {. $ y){'jd');'" width="';(10.5 + >./  xw +&, xc);'" height="';(32 + (18* (-.b) * ({: ; uni41) e. 10;13)+{: ,yc);'" rx="6">',tt,'</rect>',tm  end.
 )
 
@@ -259,58 +270,60 @@ bH=.16 + bh +&{: by=. (1&>.@:{:@:$y)&# , (mask y) ({."1@:([ # +/\ @:(0&,)@:}:@:(
 slt=.,. , datatype each 5 s:  y
 tt=. '<title>',"1 ' Label Type: ',"1(;"1 slt),"1(LF,' Index: '),"1(;"1(":each ,. , 6 s: y)),"1(' ',LF,' Total Symbols Assigned: '),"1(": 0 s: 0),"1' </title>'
 tm=. '<svg x="';"1 bx ;"1'" y="';"1 by ;"1'"><rect class=" ',"1((('unicode';'unicode4')i.slt){::'su';'sv';'sl'),"1'" width="',"1 (": ,. , bw ),"1'" height="',"1 (": ,. , bh),"1'" rx="3">',"1 tt ,"1'</rect>',"1 '<text  class="s" x="2" y="18" >`</text>',"1'"><svg>',"1  (>ysvg=. ,. {. > , <"1 > , &.:> {: each ysvg),"1 '</svg></svg>' NB. red background of symbol last text element is ` stroke
-tt=. '<title> Symbol ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+tt=. '<title> Symbol ',LF,(; b{'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
 tm=. ;": each '<svg  x="4" y="8">';"1  tm ,"1<'</svg>'
 '<rect class="';((1-: {. $ y){'jd');'" width="';(bW);'" height="';(bH);'" rx="6">',tt,'</rect>',tm
 )
 
 bxsvg=: 4 : 0 NB. boxed cases - sends contents through the process and boxes those results
-'s b'=. ({.,{:) x 
+'s b'=. ({.,{:) x
+BOX=:>:BOX
 ysvg=.  vg@> y  
 bW=.16 + bw +&{: bx=. }: 0 , +/\  <: bw=.>./  > , <"1 [ 3 {::"1  ysvg
 bh=. (1&>.@:{:@:$ y) # >./^:(2&<:@:#@:$)^:_  >./"1 [ 5 {::"1 ysvg NB. >./^:(1&<:@:#@:$) swapped with , if the exception of 2 dimensions is covered
 bH=.32 + bh +&{: by=. (1&>.@:{:@:$y)&# , (mask y) ({."1@:([ # +/\ @:(0&,)@:}:@:(#!.20^:_1)))  >, <"1($y)$ <: bh 
 'bx bw bh by'=. ,.@,@(($y)&$) each bx ; bw ; bh ; by NB. may be smoothed a bit just normalizing the number of items of bw may be useful to look at the ysvg=. > , <"1 ysvg trick
 tm=. (<"1 '<g><rect class="x" width="',"1 (": ,. bw) ,"1'" height="',"1 (":,. bh) ,"1'" ></rect><rect class="'),.(1&{"1 ysvg),.(<'" stroke-width="2" width="') ,. (<"0 bw) ,.(<'" height="'),. (<"0 bh) ,. ,. 7&}. each {:"1 ysvg=. > , <"1 ysvg
-tt=. '<title> Box ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+tt=. '<title> Box ',LF,(; b{'';(' Depth: ',(":BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+BOX=:<:BOX
 tm=. ; ": each '<svg  x="';"1((4*b)+ 4+ bx);"1'" y="';"1(17+by);"1'" width="';"1 bw;"1'" height="';"1 bh;"1'">';"1  tm ,"1<'</svg>'
 '<rect class="';((1-: {. $ y){'jd');'" width="';(bW- 8 * -. b);'" height="';(bH);'" rx="6">',tt,'</rect>',tm
 )
 
 boosvg=: 3 : 0 NB. numeric case - boolean  
-tt=. '<title> Boolean ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+tt=. '<title> Boolean ',LF,(; (BOX>:0){'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
 tm=. ;(<'<text class="b" x="3.5" y="'),"1 (,. <"1 cnv ,. 20+ 18*(# i.@#)@mask y),"1(<'">'),"1 (,. , <"1  ": y) ,"1 <'</text>'
 '<rect class="';((1-: {. $ y){'jd');'" width="';(7 + 9.6 * {:$":y);'" height="';(14 + 18 * # mask  y);'" rx="6">',tt,'</rect>',tm
 )
 
 intsvg=: 3 : 0 NB. numeric case - integer  
-tt=. '<title> Integer ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+tt=. '<title> Integer ',LF,(; (BOX>:0){'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
 tm=. ;(<'<text class="i" x="3.5" y="'),"1 (,. <"1 cnv ,. 20+ 18*(# i.@#)@mask y),"1(<'">'),"1 (,. , <"1  ": y) ,"1 <'</text>'
 '<rect class="';((1-: {. $ y){'jd');'" width="';(7 + 9.6 * {:$":y);'" height="';(14 + 18 * # mask  y);'" rx="6">',tt,'</rect>',tm
 )
 
 extsvg=: 3 : 0 NB. numeric case - extended  
-tt=. '<title> Extended ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+tt=. '<title> Extended ',LF,(; (BOX>:0){'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
 tm=. ;(<'<text class="e" x="3.5" y="'),"1 (,. <"1 cnv ,. 20+ 18*(# i.@#)@mask y),"1(<'">'),"1 (,. , <"1  ": y) ,"1 <'</text>'
 '<rect class="';((1-: {. $ y){'jd');'" width="';(7 + 9.6 * {:$":y);'" height="';(14 + 18 * # mask  y);'" rx="6">',tt,'</rect>',tm
 )
 
 flosvg=: 3 : 0 NB. numeric case - floating  
-tt=. '<title> Floating ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+tt=. '<title> Floating ',LF,(; (BOX>:0){'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
 vals=. ,. , (": y) <@rplc"1 'e';'<tspan class="fa">e</tspan>'
 tm=. ;(<'<text class="f" x="3.5" y="'),"1 (,. <"1 cnv ,. 20+ 18*(# i.@#)@mask y),"1(<'">'),"1  vals ,"1 <'</text>'
 '<rect class="';((1-: {. $ y){'jd');'" width="';(7 + 9.6 * {:$":y);'" height="';(14 + 18 * # mask  y);'" rx="6">',tt,'</rect>',tm
 )
 
 ratsvg=: 3 : 0 NB. numeric case - rational  
-tt=. '<title> Rational ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+tt=. '<title> Rational ',LF,(; (BOX>:0){'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
 vals=. ,. , (": y) <@rplc"1 'r';'<tspan class="ra">r</tspan>'
 tm=. ;(<'<text class="r" x="3.5" y="'),"1 (,. <"1 cnv ,. 20+ 18*(# i.@#)@mask y),"1(<'">'),"1  vals ,"1 <'</text>'
 '<rect class="';((1-: {. $ y){'jd');'" width="';(7 + 9.6 * {:$":y);'" height="';(14 + 18 * # mask  y);'" rx="6">',tt,'</rect>',tm
 )
 
 comsvg=: 3 : 0 NB. numeric case - complex  
-tt=. '<title> Complex ',LF,' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
+tt=. '<title> Complex ',LF,(; (BOX>:0){'';(' Depth: ',(":>:BOX),LF)),' Shape: ',((''-:  $ y){::((":  $ y);'atom')),' </title>'
 vals=. ,. , (": y) <@rplc"1 'j';'<tspan class="ja">j</tspan>'
 tm=. ;(<'<text class="c" x="3.5" y="'),"1 (,. <"1 cnv ,. 20+ 18*(# i.@#)@mask y),"1(<'">'),"1  vals ,"1 <'</text>'
 '<rect class="';((1-: {. $ y){'jd');'" width="';(7 + 9.6 * {:$":y);'" height="';(14 + 18 * # mask  y);'" rx="6">',tt,'</rect>',tm
