@@ -157,7 +157,7 @@ end.
 zerosvg=: 4 : 0 NB. empty shapes case for all types
 'typ s'=.x
 if. s do. 34;32;'<rect class="syb" x="15.5" y="7" width="14.39" rx="2"></rect><title> UTF-8 : 0</title></rect><text font-family="',FONT,'" font-size="0.8em" x="18.5" y="20"> </text>' NB. case for s: 0{a.  which has shape 0
-      else. lbtt tt=. '<title> ',(; (('sparse boolean';'sparse integer';'sparse floating';'sparse complex';'sparse boxed';'literal';'unicode';'unicode4';'symbol';'boxed';'boolean';'integer';'extended';'floating';'rational';'complex') i. <typ){ ('Sparse Boolean';'Sparse Integer';'Sparse Floating';'Sparse Complex';'Sparse Boxed';'Literal';'Unicode';'Unicode4';'Symbol';'Box';'Boolean';'Integer';'Extended';'Floating';'Rational';'Complex')),' ',LF,(; (BOX>:0){'';(' Depth: ',(":>:BOX),LF)),' Shape: ',(":$y),' </title>'
+      else. tt=. lbtt '<title> ',(; (('sparse boolean';'sparse integer';'sparse floating';'sparse complex';'sparse boxed';'literal';'unicode';'unicode4';'symbol';'boxed';'boolean';'integer';'extended';'floating';'rational';'complex') i. <typ){ ('Sparse Boolean';'Sparse Integer';'Sparse Floating';'Sparse Complex';'Sparse Boxed';'Literal';'Unicode';'Unicode4';'Symbol';'Box';'Boolean';'Integer';'Extended';'Floating';'Rational';'Complex')),' ',LF,(; (BOX>:0){'';(' Depth: ',(":>:BOX),LF)),' Shape: ',(":$y),' </title>'
            '<rect class="';('z',": (*@:# + *@:#@:, + *@:(+/)@:$) y);'" width="';( 6 + (8 * {:)`(0:) @.(0-:{:)$ y);'" height="';(14 + 18 *  */@:}:@:$ y);'" rx="6">',tt,'</rect>' end.
 )
 
