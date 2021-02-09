@@ -6,6 +6,7 @@ FILES=: 0 : 0
 jig.ijs
 jig902.ijs
 jig901.ijs
+jig900.ijs
 jig807.ijs
 jig805.ijs
 manifest.ijs
