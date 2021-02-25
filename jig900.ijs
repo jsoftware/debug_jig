@@ -1,5 +1,6 @@
 NB. Version 900 for this add on - QTide tooltips used - J901 passed testfile load '/users/bobtherriault/j901-user/projects/jig900/runjig901.ijs'
-NB.coerase <'jig' NB. clear previous jig variables, helps in updates
+NB. This version also limits the number of processes to 10 plus however many saved displays are created.
+coerase <'jig' NB. clear previous jig variables including handlists, savelists and titlelists
 cocurrent'jig' NB. Set the defining locale as jig
 require 'gl2'
 
@@ -47,8 +48,9 @@ CSS=: 0 : 0  NB. CSS for the different types and animations of tootips.
 
 DISPLAY=: 0 : 0 NB. Form that contains the display as well as zoom and font buttons
 pc enhanced;
+bin v;
 bin h;
-cc w1 webview;
+minwh 250 170; cc w1 webview;set _ sizepolicy minimum;
 bin vs;
 cc FI static;cn "Font";
 maxwh 80 20;cc menlo radiobutton;cn "menlo";set _ tooltip "Set display font to menlo";
@@ -62,33 +64,23 @@ maxwh 60 20;cc m radiobutton group;cn "100%";set _ tooltip "View at original siz
 maxwh 60 20;cc ml radiobutton group;cn "200%";set _ tooltip "Zoom in to 200% size";
 maxwh 60 20;cc l radiobutton group;cn "300%";set _ tooltip "Zoom in to 300% size";
 maxwh 60 20;cc xl radiobutton group;cn "400%";set _ tooltip "Zoom in to 400% size";
+bin szz;
+bin h;
+maxwh 200 30;cc sj checkbox;cn "Make Permanent";set _ value 0; set _ tooltip "Keep this window in memory";
+maxwh 200 30;cc saved static;cn "Saved";set _ visible 0; set _ tooltip "This window is saved permanently";
+bin s;
+maxwh 80 30;cc dj button;cn "Retrieve";set _ tooltip "Access to previous windows";
 bin szz; 
-)
-
-SCALE=:1 NB. display zoom
-ZM=: 3 NB. index for display zoom
-FM=: 0 NB. index for display f0nt
-FONT=: >FM{'menlo';'unifont' NB. options to be 0-menlo for looks and 1-unifont for spacing of unprintables
-DEPTH=: _1
-
-webdisplay=: 4 : 0 NB. Displays the results in webview for jqt environment and returns ID of window
-wd DISPLAY
-wd 'pn *', > {. x
-wd 'set w1 wh *', ": 200 170>. (_225 _200 + 2 3 { ". wd 'qscreen') <. SCALE * > {: x
-wd 'set w1 html *', y
-wd 'set ', (>ZM{'xs';'s';'sm';'m';'ml';'l';'xl'),' value 1;'
-wd 'set ', (>FM{'menlo';'unifont'),' value 1;'
-wd 'pshow'
-wd 'qhwndp;'
 )
 
 enhanced_menlo_button=: 3 : 'font 0'
 enhanced_unifont_button=: 3 : 'font 1'
 
 font=: 3 : 0
+ndx=. handlist_jig_ i. wd 'qhwndp'
 FM=: y [ FONT=: >y{'menlo';'unifont'
-vobj=. ". 'handle',wd 'qhwndp;' [ loc=. ". 'locale',wd 'qhwndp;'
-loc visual vobj [ enhanced_close ''
+'vobj loc'=. 1 0 1 # ndx {titlelist NB. middle 0 is just a dummy variable to get rid of the current window zoom and font info
+(0;loc) visual vobj [ enhanced_close ''
 )
 
 enhanced_xs_button=: 3 : 'zoom ''xs'''
@@ -100,22 +92,120 @@ enhanced_l_button=: 3 : 'zoom ''l'''
 enhanced_xl_button=: 3 : 'zoom ''xl'''
 
 zoom=: 3 : 0
+ndx=. handlist_jig_ i. wd 'qhwndp'
 SCALE=: (ZM { 0.1 0.2 0.5 1 2 3 4) [ZM=:(<y)i.~ 'xs';'s';'sm';'m';'ml';'l';'xl'
-vobj=. ". 'handle',wd 'qhwndp;' [ loc=. ". 'locale',wd 'qhwndp;'
-loc visual vobj [ enhanced_close ''
+'vobj loc'=. 1 0 1 # ndx {titlelist NB. middle 0 is just a dummy variable to get rid of the current window zoom and font info
+(0;loc) visual vobj [ enhanced_close ''
 )
 
-enhanced_close=: 3 : 'wd ''pclose''[ erase ''handle'',wd ''qhwndp;''[ erase ''locale'',wd ''qhwndp;'''
+enhanced_sj_button=: 3 : 0
+ savejig t=. wd 'qhwndp'
+ wd 'psel ', t
+ wd 'set sj visible 0; set saved visible 1; set _ text <b>Saved</b>'
+ wd 'set xs visible 0;set s visible 0;set sm visible 0;set m visible 0;set ml visible 0;set l visible 0;set xl visible 0;'
+ wd 'set menlo visible 0;set unifont visible 0;set FI visible 0;set SI visible 0;'
+ wd 'setp wh ',": 75 0 -~ ". wd 'getp wh'
+wd 'pshow;'
+) 
+
+enhanced_close=:  wd bind 'setp visible 0;'
+
+init=: 3 : 0 NB. create initial 10 handles to be recycled and savelist for hndles not to be recycled and titlelist as titles are created with jig windows
+ handlist=: crjig i. 10  NB. create 10  handles
+ savelist=: 0 10 $ '' NB. receptacle for future saved 
+ titlelist=: 10 3 $ a:  NB. receptacle for available titles and locales
+ windex=: _1  NB. start from 0 with first jig window
+ i. 0 0
+)
+crjig=: 3 : 0"0
+ wd DISPLAY
+ wd 'qhwndp'
+)
+
+newjig=: 3 : 0  NB. y is the title of the jig window
+ windex=: 10 | >: windex NB. cycles through the handles
+ titlelist =: y windex } titlelist NB. adds title to titlelist
+ windex { handlist NB. returns handle for the jig window 
+)
+
+savejig=: 3 : 0  NB. y is the handle of the jig window
+ savelist=: savelist, y NB. add window to save list
+ ndx=. handlist i. y  NB. uses handle of selected window to find position in hand
+ titlelist=: titlelist, ndx { titlelist NB. add saved window to end of titlelist
+ titlelist=: (a:,a:,a:) ndx } titlelist NB. create new blank in titlelist
+ handlist=: (crjig 0) ndx } handlist  NB. replace the saved window with a new one
+ i. 0 0
+)  
+
+webdisplay=: 4 : 0 NB. Displays the results in webview for jqt environment
+ wd 'psel *' ,newjig t=. ((0;0) {:: x );('      NB. ',(>ZM{'10';'20';'50';'100';'200';'300';'400') , '% ',(>FM{'menlo';'unifont'));(0;1){:: x
+ wd 'pn *', (; 2 {. t)
+ wd 'set w1 wh *', ": s=. 250 170>. (_225 _200 + 2 3 { ". wd 'qscreen') <. SCALE * > {: x
+ wd 'setp wh ',": s + 100 65
+ wd 'set w1 html *', y
+ wd 'set ', (>ZM{'xs';'s';'sm';'m';'ml';'l';'xl'),' value 1;'
+ wd 'set ', (>FM{'menlo';'unifont'),' value 1;'
+ wd 'pshow'
+)
+
+JIGDISPLAY=: 0 : 0
+pc jigdisplay popup closeok;pn "Jig displays";
+bin vh;
+cc currentinfo static;cn "Select Current Displays";
+cc savedinfo static;cn "Select Saved Displays";
+bin zh;
+minwh 240 20;cc current listbox;
+minwh 240 20;cc saved listbox;
+bin zh;
+cc ok button;cn "OK";
+cc cancel button;cn "Cancel";
+bin szz;
+pas 4 2;
+rem form end;
+)
+
+enhanced_dj_button=: 3 : 0  
+ t=. wd 'qform'
+ wd JIGDISPLAY
+ wd 'set current items ',; (DEL , ,&DEL)  each  2 <@;@{."1 [ 10{.titlelist 
+ wd 'set saved items ',; (DEL , ,&DEL)  each  2 <@;@{."1 [ 10}.titlelist
+ wd 'pmove ', (": _200 100  + 2{.". t) , ' 270 290'
+ wd 'pshow;'
+)
+
+jigdisplay_ok_button=: 3 : 0
+ ndx1=. ".current_select
+ ndx2=. ".saved_select
+ if. _2 ~: ndx1 + ndx2 do. NB. nothing selected show nothing just exit
+  if. ndx1 ~: _1 do. showjig ndx1 {handlist end. NB. show current selected
+  if. ndx2 ~: _1 do. showjig ndx2 {savelist end. end. NB. show saved selected
+ wd 'psel jigdisplay;'
+ wd 'pclose;'
+)
+showjig=: 3 : 0 
+ wd 'psel *',y
+ wd 'setp visible 1;'
+ wd 'pshow;'
+)
+
+jigdisplay_enter=: jigdisplay_ok_button
+jigdisplay_close=: jigdisplay_cancel=: jigdisplay_cancel_button=: wd bind 'pclose;'
+
 enhanced_jctrl_fkey=: labs_run_jqtide_ bind 0
 htmpack=: 3 :'''<hmtl><head><meta charset="UTF-8">'', (CSS rplc ''<FONT>'';FONT),''</head><body>'', y ,''</body></html>'''
 cnv=:,/ @: > @: (8!:0)"1 NB. converts _20 to -20 for svg text and justifies appropriately
 sc=: 3 : '((1 >. % SCALE)* ])  y'
 lbtt=: 3 : ';"1 {&a. each (<194 160) (I. @:((<32)=])) }"1 boxutf y' NB. substitutes 194 160 for 32 in tooltips for nbsp
 anim=:'<set attributeName="fill-opacity" to="1" /><animate attributeName="fill-opacity" begin="mouseover" from="1" to="0" calcMode="linear" dur="0.5" fill="freeze" /><animate attributeName="fill-opacity" begin="mouseout" from="0" to="1" calcMode="linear" dur="0.25" fill="freeze"/>'
+DEPTH=: _1
+SCALE=:1 NB. display zoom
+ZM=: 3 NB. index for display zoom
+FM=: 0 NB. index for display f0nt
+FONT=: >FM{'menlo';'unifont' NB. options to be 0-menlo for looks and 1-unifont for spacing of unprintables
 
 visual=: 4 : 0 NB. main verb that collects input, checks for errors then sends for processing, takes these results and wraps them up to be displayed by webdisplay. Retains information on the current window to track multiple displays.
 cocurrent > {: x
-if. >{. x do. vobj_jig_=. findline_jig_ y else. vobj_jig_=.y end. NB. if true then process current line, if false then just a window redraw for size or font don't want to go back to the line.
+if. >{. x do. vobj_jig_=. findline_jig_ y  else. vobj_jig_=.y  end. NB. if true then process current line, if false then just a window redraw for size or font don't want to go back to the line.
 if. _1~: t_jig_=. 4!:0 <vobj_jig_ do. try. t_jig_ =. 4!:0 <'prox_jig_'[ ". 'prox_jig_=. ', vobj_jig_ catch. t=._2 end. end.  
 cocurrent 'jig'
  select. t
@@ -127,8 +217,8 @@ cocurrent 'jig'
 'fW fH'=.   (sc 200 120) + 3 5 {::"0 _ tm 
 tm=.  ; (3&{. , ":@(3&{::) ; 4&{ , ":@(5&{::) ; {:) tm  NB. changes format on width and height 
 tm=.'<svg width="',(": SCALE * fW),'" height="',(": SCALE * fH),'" viewbox="',(cnv sc _180) ,' ',(cnv sc _85),' ', (": fW,fH),'" preserveAspectRatio="xMidYMin meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >',tm,'</svg>'
-ID=:":(vobj; 100 + fW , fH) webdisplay htmpack tm   
-(i.0 0)[('handle',ID)=:vobj [ ('locale',ID)=: 0;>{:x
+((vobj;{:x); 100 + fW , fH) webdisplay htmpack tm   NB. x is input line boxed to locale, y is the svg representation.
+(i.0 0) 
 )
 
 vgalt=: 4 : 0
@@ -353,4 +443,4 @@ findline =: 3 : 0    NB. WinSelect is a character index; WinText is entire windo
 )
 
 jig_z_ =:   3 : '((1;coname 0$0) visual_jig_ 1:) y'
-
+init ''
