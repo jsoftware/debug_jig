@@ -4,6 +4,7 @@ VERSION=: '2.0.11'
 PLATFORMS=: ''
 FILES=: 0 : 0
 jig.ijs
+jig903.ijs
 jig900.ijs
 jig800.ijs
 manifest.ijs
