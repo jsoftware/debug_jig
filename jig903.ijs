@@ -107,6 +107,7 @@ wd 'pshow;'
 
 enhanced_close=:  wd bind 'setp visible 0;'
 
+init=: 3 : 0 NB. create initial 10 handles to be recycled and savelist for hndles not to be recycled and titlelist as titles are created with jig windows
  handlist=: crjig i. 10  NB. create 10  handles
  savelist=: 0 10 $ '' NB. receptacle for future saved 
  titlelist=: 10 3 $ a:  NB. receptacle for available titles and locales
