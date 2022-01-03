@@ -1,7 +1,6 @@
 NB.  This add-on will select appropriate version of J 
 
 3 : 0 ''
-test=: 3 : 0 ''
 if. IFJHS do. echo 'jig is only supported on jQt IDE at this time' return. end.
 select. t=.4 {. 9!:14 ''
 case. 'j903' do. load '~addons/debug/jig/jig903.ijs'
