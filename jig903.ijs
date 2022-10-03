@@ -432,6 +432,6 @@ findline =: 3 : 0    NB. WinSelect is a character index; WinText is entire windo
         else. (#~ -.@:(*./\)@:=&' ') ": ({. WinSelect_jqtide_) ((LF&taketo&.|.)@:{. , LF&taketo @:}.)  7 u: WinText_jqtide_  end.NB. The line that the cursor is on if 0 - Function key version
 )
 
-vis_z_ =:   3 : '((1;coname 0$0) visual_jig_ 1:) y'
+jig_z_ =:   3 : '((1;coname 0$0) visual_jig_ 1:) y'
 
 init ''
