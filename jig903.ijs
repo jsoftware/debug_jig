@@ -428,7 +428,7 @@ tm=. ;(<'<text class="c" x="4" y="'),. (cnv each 20+ 18x *(# i.@#)@mask y),. (<'
 )
 
 findline =: 3 : 0    NB. WinSelect is a character index; WinText is entire window; if window contains non-ASCII, convert to unicode
-  if. y do. ; }. ;:(#~ -.@:(*./\)@:=&' ') ": > {: < ;. _2 (wd'sm get inputlog'), LF NB. pull the last line only for the monadic case Programmatic version strip off first word which would be invoking verb
+   if. y do. (#~ (+./\)@:=&' ') ": > {: < ;. _2 (wd'sm get inputlog'), LF NB. pull the last line only for the monadic case Programmatic version strip off first word which would be invoking verb
         else. (#~ -.@:(*./\)@:=&' ') ": ({. WinSelect_jqtide_) ((LF&taketo&.|.)@:{. , LF&taketo @:}.)  7 u: WinText_jqtide_  end.NB. The line that the cursor is on if 0 - Function key version
 )
 
