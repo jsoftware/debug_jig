@@ -11,7 +11,12 @@ Jig=.PM{:: (LF,'   You need to install the Jig addon.',LF,'   To use Package Man
 Please=.(*./VE,QT,PM){::(LF,'   Please, address the issue(s) to use jig.');'   Please, enjoy using jig.',LF,'   There is a lab, if you would like further instruction. Help | Studio | Labs... | jig Augmented Display'
 echo LF,Version,jqt,Jig,Please,LF
 
-select. t=.4 {. 9!:14 ''
+if. 3=4!:0<'revinfo_j_' do.
+ t=. getJverold ''
+else.
+ t=. 4 {. 9!:14 ''
+end.
+select. t
 case. 'j903';'j904' do. load '~addons/debug/jig/jig903.ijs'
 case. 'j901';'j902' do. load '~addons/debug/jig/jig900.ijs'
 case. 'j805';'j806';'j807' do. load '~addons/debug/jig/jig800.ijs' 

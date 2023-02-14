@@ -280,7 +280,12 @@ findline =: 3 : 0    NB. WinSelect is a character index; WinText is entire windo
 v_z_ =:   3 : '((1;coname 0$0) visual_jig_ 1:) y'
 
 testsuite=: 3 : 0 
-select. t=.4 {. 9!:14 ''
+if. 3=4!:0<'revinfo_j_' do.
+ t=. getJverold ''
+else.
+ t=. 4 {. 9!:14 ''
+end.
+select. t
 case. 'j901' do. load '/users/bobtherriault/j901-user/projects/enhanced/runjig901.ijs'
 case. 'j902' do. load '/users/bobtherriault/j902-user/projects/enhanced/runjig902.ijs'
 case. 'j805' do. load '/users/bobtherriault/j64-805-user/projects/enhanced/runjig805.ijs'  
