@@ -249,7 +249,7 @@ end.
 
 zerosvg=: 4 : 0 NB. empty shapes case for all types
 'typ depth s b path'=.x
-if. s do. 34;32;'<rect class="syb" x="15.5" y="7" width="14.39" rx="2">',(tooltip '<h1> UTF-8 : 0 </h1>'),'</rect><text font-family="',FONT,'" font-size="0.8em" x="18.5" y="20"> </text>' NB. case for s: 0{a.  which has shape 0
+if. s do. 34;32;'<rect class="syb" x="15.5" y="7" width="14.39" rx="2">',(tooltip ' Empty shape '),'</rect><text font-family="',FONT,'" font-size="0.8em" x="18.5" y="20"> </text>' NB. case for s: 0{a.  which has shape 0
       else. tt=. ' ',(; (('sparse boolean';'sparse integer';'sparse floating';'sparse complex';'sparse boxed';'literal';'unicode';'unicode4';'symbol';'boxed';'boolean';'integer';'extended';'floating';'rational';'complex') i. <typ){ ('Sparse Boolean';'Sparse Integer';'Sparse Floating';'Sparse Complex';'Sparse Boxed';'Literal';'Unicode';'Unicode4';'Symbol';'Box';'Boolean';'Integer';'Extended';'Floating';'Rational';'Complex')),LF,' Shape: ',(":$y),(; b{'';(LF,LF,' Depth: ',(":depth),LF,' Path: ',(}: path)))
            '<rect class="';('z',": (*@:# + *@:#@:, + *@:(+/)@:$) y);'" width="';( 6 + (8 * {:)`(0:) @.(0-:{:)$ y);'" height="';(14 + 18 *  */@:}:@:$ y);'" rx="6"',tooltip tt end.
 )
