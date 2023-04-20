@@ -281,7 +281,7 @@ v_z_ =:   3 : '((1;coname 0$0) visual_jig_ 1:) y'
 
 testsuite=: 3 : 0 
 if. 3=4!:0<'revinfo_j_' do.
- t=. getJverold ''
+ t=. 'j', ": 100 #. 2 {. 100 #.inv >{.revinfo_j_''
 else.
  t=. 4 {. 9!:14 ''
 end.

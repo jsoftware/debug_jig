@@ -6,7 +6,7 @@ require 'pacman'
 if. IFJHS do. echo 'jig is only supported on jQt IDE at this time' return. end.
 
 if. 3=4!:0<'revinfo_j_' do. NB. check for JVERSION (including new 9.4 format)
- t=. getJverold_jpacman_ ''
+ t=. 'j', ": 100 #. 2 {. 100 #.inv >{.revinfo_j_''
 else.
  t=. 4 {. 9!:14 ''
 end.
@@ -20,8 +20,8 @@ Please=.(*./VE,QT,PM){::(LF,'   Please, address the issue(s) to use jig.');'   P
 echo LF,Version,jqt,Jig,Please,LF
 
 select. t
-case. 'j903';'j904' do. load '~addons/debug/jig/jig903.ijs'
+case. 'j903';'j904';'j905' do. load '~addons/debug/jig/jig903.ijs'
 case. 'j901';'j902' do. load '~addons/debug/jig/jig900.ijs'
 case. 'j805';'j806';'j807' do. load '~addons/debug/jig/jig800.ijs' 
-case.        do. echo 'jig only supported for j805, j806, j807, j901, j902 and j903.' end.
+case.        do. echo 'jig only supported for j805, j806, j807, j901, j902, j903 and above.' end.
 )

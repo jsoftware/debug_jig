@@ -1,6 +1,6 @@
 NB. manifest for Jig
 CAPTION=: 'Augmented Display of J results'
-VERSION=: '2.0.24'
+VERSION=: '2.0.25'
 PLATFORMS=: ''
 FILES=: 0 : 0
 jig.ijs
