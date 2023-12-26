@@ -20,8 +20,8 @@ Please=.(*./VE,QT,PM){::(LF,'   Please, address the issue(s) to use jig.');'   P
 echo LF,Version,jqt,Jig,Please,LF
 
 select. t
-case. 'j903';'j904';'j905' do. load '~addons/debug/jig/jig903.ijs'
+case. 'j903';'j904';'j905';'j906' do. load '~addons/debug/jig/jig903.ijs'
 case. 'j901';'j902' do. load '~addons/debug/jig/jig900.ijs'
 case. 'j805';'j806';'j807' do. load '~addons/debug/jig/jig800.ijs' 
-case.        do. echo 'jig only supported for j805, j806, j807, j901, j902, j903 and above.' end.
+case.        do. echo 'jig only supported for j805 or above.' end.
 )
